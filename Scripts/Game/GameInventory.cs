@@ -28,4 +28,8 @@ public class GameInventory : MonoBehaviour {
     }
 
     // Inventory Scenes
+
+    // Inventory Logic
+    //* Skills - Card Elements
+    //* Equipment - Armor, Weapon
 }
