@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneChange : MonoBehaviour {
 
+    //private bool isPausePanelVisible = false;
+
+    //public GameObject PausePanel = null;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -16,6 +20,10 @@ public class SceneChange : MonoBehaviour {
 	}
 
     // Load game scene
+    public void LoadGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
 
     // Load saved game
 
@@ -29,8 +37,26 @@ public class SceneChange : MonoBehaviour {
         SceneManager.LoadScene("MainMenu_Options");
     }
 
-    // Load pause menu
+    public void TogglePausePanel()
+    {
+        //if (Input.GetButtonDown("Pause Button"))
+        //{
+        //    isPausePanelVisible = true;
+        //}
+    }
+
+    private void SetPausePanelVisibility()
+    {
+        //if (PausePanel != null)
+        //{
+        //    PausePanel.SetActive(isPausePanelVisible);
+        //}
+    }
 
     // Load inventory screen(s)
+    public void LoadInventoryMain()
+    {
+        SceneManager.LoadScene("Inventory_Main");
+    }
 
 }
