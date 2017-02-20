@@ -3,15 +3,15 @@ using System.Collections;
 
 public class Player_Script : MonoBehaviour {
 
-    public float speed;
+    public float moveSpeed;
+
+    private Vector2 velocity;
 
     private int health;
     private int attack;
     private int defence;
 
-
     private int numTurn;
-
     private bool inBattle;
 
 
@@ -22,26 +22,30 @@ public class Player_Script : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        Movement();
+	void Update ()
+    {
+        float dt = Time.deltaTime;
+
+        UpdateInput();
+        UpdateMovement(dt);
 	}
 
-    void Movement()
+    void UpdateInput()
     {
-        // dont care about the naming first
-
-
-        float forwardMovement = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-        float turnMovement = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-
-        transform.Translate(Vector3.up  * forwardMovement);
-        transform.Translate(Vector3.right * turnMovement);
+        velocity.Set(
+            Input.GetAxis("Horizontal") * moveSpeed,
+            Input.GetAxis("Vertical") * moveSpeed);
     }
 
+    void UpdateMovement(float dt)
+    {
+        transform.Translate(velocity.x * dt, velocity.y * dt, 0);
+    }
 
     public int GetAttack() { return attack; }
     public int GetDefence() { return defence; }
     public int GetHealth() { return health; }
+    public Vector2 GetVelocity() { return velocity; }
 
     public void GotHit(int damg)
     {
