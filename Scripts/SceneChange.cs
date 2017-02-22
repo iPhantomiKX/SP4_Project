@@ -56,7 +56,7 @@ public class SceneChange : MonoBehaviour {
     // Load inventory screen(s)
     public void LoadInventoryMain()
     {
-        SceneManager.LoadScene("Inventory_Main");
+        SceneManager.LoadScene("Inventory");
     }
 
 }

@@ -2,16 +2,15 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class DragHandeler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
-{
-    public static GameObject itemDragged;
-    Vector3 startPosition;
+public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+    public static GameObject itemBeingDragged;
+    Vector3 startPos;
     Transform startParent;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        itemDragged = gameObject;
-        startPosition = transform.position;
+        itemBeingDragged = gameObject;
+        startPos = transform.position;
         startParent = transform.parent;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
@@ -23,11 +22,12 @@ public class DragHandeler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        itemDragged = null;
+        itemBeingDragged = null;
         GetComponent<CanvasGroup>().blocksRaycasts = true;
-        if(transform.parent == startParent)
+        if (transform.parent == startParent)
         {
-            transform.position = startPosition;
+            transform.position = startPos;
+
         }
     }
 }

@@ -1,34 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public class ItemAssigner : MonoBehaviour, IHasChanged {
+using UnityEngine.UI;   //text component
 
-    [SerializeField] Transform slots;
-    [SerializeField] Text itemText;
+public class InventorySystem : MonoBehaviour, IHasChanged {
+    public Transform slots;
+    public Text inventoryText;
 
-	// Use this for initialization
 	void Start () {
         HasChanged();
 	}
 
-    public void HasChanged()
+	public void HasChanged()
     {
         System.Text.StringBuilder builder = new System.Text.StringBuilder();
-        builder.Append(" - ");
+        builder.Append(" ");
         foreach (Transform slotTransform in slots)
         {
             GameObject item = slotTransform.GetComponent<SlotLogic>().item;
             if (item)
             {
-                //!data and name of card
                 builder.Append(item.name);
-                builder.Append(" - ");
+                builder.Append(" ");
             }
         }
-        itemText.text = builder.ToString();
-
+        inventoryText.text = builder.ToString();
     }
 }
 
