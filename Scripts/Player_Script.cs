@@ -1,60 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player_Script : MonoBehaviour {
+public class Player_Script : LivingEntity {
 
-    public float moveSpeed;
+    public float speed;
 
-    private Vector2 velocity;
-
-    private int health;
-    private int attack;
-    private int defence;
-
-    private int numTurn;
-    private bool inBattle;
-
-
+    TileCoord PreTileID;
 
 	// Use this for initialization
-	void Start () {
-	
+    public override void Start()
+    {
+        base.Start();
+        PreTileID = CurrentTileID;
 	}
 	
 	// Update is called once per frame
-	void Update ()
-    {
-        float dt = Time.deltaTime;
+	void Update () {
 
-        UpdateInput();
-        UpdateMovement(dt);
+        Vector3 temp = Map.PositionToCoord(transform.position);
+        CurrentTileID.Set(Mathf.FloorToInt(temp.x), Mathf.FloorToInt(temp.y));
+
+        //Debug.Log(CurrentTileID.x);
+        //Debug.Log(CurrentTileID.y);
+
+        if(!Battle) Movement();
+        if(health <= 0 && !dead)  Die();
 	}
 
-    void UpdateInput()
+    void Movement()
     {
-        velocity.Set(
-            Input.GetAxis("Horizontal") * moveSpeed,
-            Input.GetAxis("Vertical") * moveSpeed);
+        float forwardMovement = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+        float SideMovement = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+
+        transform.Translate(Vector3.up  * forwardMovement);
+        transform.Translate(Vector3.right * SideMovement);
+
+        if (PreTileID != CurrentTileID)
+        {
+            currentTurn++;
+            PreTileID = CurrentTileID;
+        }
     }
-
-    void UpdateMovement(float dt)
-    {
-        transform.Translate(velocity.x * dt, velocity.y * dt, 0);
-    }
-
-    public int GetAttack() { return attack; }
-    public int GetDefence() { return defence; }
-    public int GetHealth() { return health; }
-    public Vector2 GetVelocity() { return velocity; }
-
-    public void GotHit(int damg)
-    {
-        health -= damg;
-    }
-
-    public void IsDead()
-    {
-        // enabled = false;
-    }
-
 }
