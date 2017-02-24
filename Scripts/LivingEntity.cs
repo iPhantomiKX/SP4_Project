@@ -53,6 +53,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     protected bool dead;
     protected bool Battle;
+    protected bool MyTurn;
     protected int currentTurn;
 
     public event System.Action OnDeath;
@@ -84,8 +85,8 @@ public class LivingEntity : MonoBehaviour, IDamageable
         if (IMplayer)
         {
             health = 5;
-            attack = 1;
-            defence = 1;
+            attack = 5;
+            defence = 5;
 
             myName = "player";
             LivingType = Type.Player; 
@@ -107,6 +108,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         dead = false;
 
         Battle = false;
+        MyTurn = false;
         MaxDefence = defence;
         currentTurn = 0;
     }
@@ -129,11 +131,16 @@ public class LivingEntity : MonoBehaviour, IDamageable
     protected void Die()
     {
         dead = true;
-        if(OnDeath != null)
+        if (!IMplayer)
         {
-            OnDeath();
+            if (OnDeath != null)
+            {
+                OnDeath();
+
+            }
+            gameObject.tag = "Die";
+            GameObject.Destroy(gameObject);
         }
-        GameObject.Destroy(gameObject);
     }
 
 
@@ -275,6 +282,51 @@ public class LivingEntity : MonoBehaviour, IDamageable
         else return false;
     }
 
+    public TileCoord GetCurrTileID()
+    {
+        return CurrentTileID;
+    }
+
+    public IEnumerator Attack(Vector3 TargetPosition)
+    {
+        Vector3 originalPosition = transform.position;
+        Vector3 attackPosition = TargetPosition;
+
+        float attackSpeed = 0.5f;
+        float percent = 0;
+        while (percent <= 1)
+        {
+            percent += Time.deltaTime * attackSpeed;
+            float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
+            transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
+            yield return null;
+            SetMyTurn(false);
+        }
+        
+        
+    }
+
+    public IEnumerator MoveTo(Vector3 TargetPosition, float speed)
+    {
+        Vector3 originalPosition = transform.position;
+        Vector3 attackPosition = TargetPosition;
+
+        while (!calculateDistance(TargetPosition, 0.5f))
+        {
+            float DistX = originalPosition.x - TargetPosition.x;
+            float DistY = originalPosition.y - TargetPosition.y;
+            transform.position += new Vector3(-DistX * Time.deltaTime * speed, -DistY * Time.deltaTime * speed, 0);
+            yield return null;
+        }
+        transform.position = TargetPosition;
+        currentTurn++;
+    }
+
+    public int GetTurn()
+    {
+        return currentTurn;
+    }
+
     public int GetHealth()
     {
         return health;
@@ -290,13 +342,39 @@ public class LivingEntity : MonoBehaviour, IDamageable
         return defence;
     }
 
-    public int GetTurn()
+    public void SetHealth(int _health)
     {
-        return currentTurn;
+        health = _health;
     }
 
-    public TileCoord GetCurrTileID()
+    public void SetAttack(int _attack)
     {
-        return CurrentTileID;
+        attack = _attack;
     }
+
+    public void SetDefence(int _defence)
+    {
+        defence = _defence;
+    }
+
+    public bool GetMyTurn()
+    {
+        return MyTurn;
+    }
+
+    public void SetMyTurn(bool _MyTurn)
+    {
+        MyTurn = _MyTurn;
+    }
+
+    public bool GetBattle()
+    {
+        return Battle;
+    }
+
+    public bool GetDeath()
+    {
+        return dead;
+    }
+
 }

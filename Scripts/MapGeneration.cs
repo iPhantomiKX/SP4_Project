@@ -95,7 +95,7 @@ public class MapGeneration : MonoBehaviour {
             for (int y=0; y<currentMap.mapSize.y; y++)
             {
                 Vector3 tilePosition = CoordToPosition(x, y);
-                Transform newTile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as Transform;
+                Transform newTile = Instantiate(tilePrefab, tilePosition + Vector3.forward * 1, Quaternion.identity) as Transform;
                 newTile.localScale = Vector3.one * (1 - outlinePercent) * tileSize;
                 newTile.parent = mapHolder;
                 tileMap[x, y] = newTile;
@@ -122,7 +122,7 @@ public class MapGeneration : MonoBehaviour {
                 {
 
                     Vector3 wallPosition = CoordToPosition(XY.x, XY.y);
-                    Transform newwall = Instantiate(wallPrefab, wallPosition + Vector3.forward * -0.5f, Quaternion.identity) as Transform;
+                    Transform newwall = Instantiate(wallPrefab, wallPosition + Vector3.forward * 0.5f, Quaternion.identity) as Transform;
                     newwall.localScale = Vector3.one /* * (1 - outlinePercent)*/ * tileSize;
                     newwall.parent = mapHolder2;
 
@@ -139,7 +139,7 @@ public class MapGeneration : MonoBehaviour {
                 else if (y == 0 || y == currentMap.mapSize.y - 1)
                 {
                     Vector3 wallPosition = CoordToPosition(XY.x, XY.y);
-                    Transform newwall = Instantiate(wallPrefab, wallPosition + Vector3.forward * -0.5f, Quaternion.identity) as Transform;
+                    Transform newwall = Instantiate(wallPrefab, wallPosition + Vector3.forward * 0.5f, Quaternion.identity) as Transform;
                     newwall.localScale = Vector3.one /* * (1 - outlinePercent)*/ * tileSize;
                     newwall.parent = mapHolder2;
 
@@ -169,7 +169,7 @@ public class MapGeneration : MonoBehaviour {
                 if ((randomCoord != currentMap.mapCentre) && MapIsFullyAccessible(wallMap, currentwallCount + outlineWallCount))
                 {
                     Vector3 wallPosition = CoordToPosition(randomCoord.x, randomCoord.y);
-                    Transform newwall = Instantiate(wallPrefab, wallPosition + Vector3.forward * -0.5f, Quaternion.identity) as Transform;
+                    Transform newwall = Instantiate(wallPrefab, wallPosition + Vector3.forward * 0.5f, Quaternion.identity) as Transform;
                     newwall.localScale = Vector3.one /* * (1 - outlinePercent)*/ * tileSize;
                     newwall.parent = mapHolder2;
 

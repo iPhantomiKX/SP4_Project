@@ -33,20 +33,13 @@ public class Spawner : MonoBehaviour {
 
     void GenerateMonster()
     {
-    
-         
         while (monsterCount > 0)
         {
             Transform RandomTile = map.GetRandomOpenTile();
-            AI_Scripts newMonster = Instantiate(Monster, RandomTile.position + Vector3.forward * -1f, Quaternion.identity) as AI_Scripts;
+            AI_Scripts newMonster = Instantiate(Monster, RandomTile.position + Vector3.forward * -1, Quaternion.identity) as AI_Scripts;
             newMonster.transform.parent = gameObject.transform;
             monsterCount--;
         }
-    }
-
-    void OnMonsterDeath()
-    {
-
     }
 
 	// Use this for initialization
@@ -57,7 +50,6 @@ public class Spawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-    
-            GenerateMonster();
+        GenerateMonster();
     }
 }

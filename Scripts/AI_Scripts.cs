@@ -29,11 +29,6 @@ public class AI_Scripts : LivingEntity{
 
     float speed;
 
-    string path;
-
-    float Offset_x;
-    float Offset_y;
-
     State TurnState;
     bool RunOnce;
 
@@ -45,7 +40,7 @@ public class AI_Scripts : LivingEntity{
     {
         base.Start();
 
-       player = FindObjectOfType(typeof(Player_Script)) as Player_Script;
+        player = FindObjectOfType(typeof(Player_Script)) as Player_Script;
 
         //Stats bar
         Name_Text.text = myName;
@@ -79,9 +74,12 @@ public class AI_Scripts : LivingEntity{
         Vector3 temp = Map.PositionToCoord(transform.position);
         CurrentTileID.Set(Mathf.FloorToInt(temp.x), Mathf.FloorToInt(temp.y));
 
+        // StartCoroutine(At
 
-        if (CurrentTileID == player.GetCurrTileID())
+
+        if (CurrentTileID == player.GetCurrTileID() && !Battle)
         {
+            gameObject.tag = "InBattle";
             JoinBattle();
             player.JoinBattle();
         }
@@ -154,12 +152,8 @@ public class AI_Scripts : LivingEntity{
             case State.CHASE:
                 {
                     Vector3 Destination = PathFinding.FindPath(new Vector3(CurrentTileID.x, CurrentTileID.y, 0), new Vector3(player.GetCurrTileID().x, player.GetCurrTileID().y, 0));
-                    Destination = Map.CoordToPosition((int)Destination.x, (int)Destination.y);
                     DesTileID = new TileCoord((int)Destination.x, (int)Destination.y);
-                    
-                    //transform.position = Map.CoordToPosition((int)Destination.x, (int)Destination.y);
-                    
-                    
+                    //transform.position = Map.CoordToPosition((int)DesTileID.x, (int)DesTileID.y);
                     break;
                 }
             case State.WANDER:
@@ -185,6 +179,9 @@ public class AI_Scripts : LivingEntity{
                     //        DesTileID.Set(CurrentTileID.x, CurrentTileID.y - 1);
                     //    }
                     //}
+
+                    Vector3 temp = Map.PositionToCoord(transform.position);
+                    DesTileID = new TileCoord((int)temp.x,(int)temp.y);
                     break;
                 }
             case State.ESCAPE:
@@ -210,23 +207,13 @@ public class AI_Scripts : LivingEntity{
 
     void Movement()
     {
-        
-        if (TurnState == State.CHASE)
-        {
-            DesTileID = player.GetCurrTileID();
-            DesNormal = new Vector3(CurrentTileID.x - DesTileID.x, CurrentTileID.y - DesTileID.y, 0);
-            DesNormal.Normalize();
-
-
-            float forwardMovement = DesNormal.y * speed * Time.deltaTime;
-            float SideMovement = DesNormal.x * speed * Time.deltaTime;
-
-            transform.Translate(Vector3.down * forwardMovement);
-            transform.Translate(Vector3.left * SideMovement);
-        }
-
+       if(TurnState == State.CHASE || TurnState == State.WANDER || TurnState == State.ESCAPE)
+       {
+           Vector3 Temp = Map.CoordToPosition(DesTileID.x, DesTileID.y);
+           Debug.Log(DesTileID.x + " : " + DesTileID.y);
+           StartCoroutine(MoveTo(Temp, speed));
+       }
         currentTurn++;
-        TurnState = State.NONE;
         RunOnce = false;
     }
 
@@ -247,7 +234,6 @@ public class AI_Scripts : LivingEntity{
         HP_Text2.text = health.ToString();
         Def_Text2.text = defence.ToString();
     }
-
 
     public void SetHoverOver(bool active)
     {
